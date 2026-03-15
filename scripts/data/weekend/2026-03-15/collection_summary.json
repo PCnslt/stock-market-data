@@ -1,11 +1,15 @@
 {
-  "collection_time": "2026-03-15T15:54:04.919212+00:00",
+  "collection_time": "2026-03-15T15:57:48.786269+00:00",
   "date": "2026-03-15",
   "day_type": "weekend",
-  "commit_type": "weekend_historical",
+  "commit_type": "weekend_all",
   "files_collected": [
-    "data/weekend/2026-03-15/historical/historical_backfill.json"
+    "data/weekend/2026-03-15/historical/historical_backfill.json",
+    "data/weekend/2026-03-15/news/weekend_news.json",
+    "data/weekend/2026-03-15/economic/economic_indicators.json",
+    "data/weekend/2026-03-15/sec_filings/sec_filings.json",
+    "data/weekend/2026-03-15/summaries/weekly_summary.json"
   ],
-  "total_files": 1,
+  "total_files": 5,
   "status": "success"
 }
