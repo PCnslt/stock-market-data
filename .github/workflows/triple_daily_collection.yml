@@ -26,7 +26,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GH_TOKEN_WRITE }}
     
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -125,7 +125,7 @@ jobs:
         cd scripts
         python create_pr.py
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN_WRITE }}
         COMMIT_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
         DAY_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day' && 'weekday' || 'special' }}
         ACTIVITY_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
@@ -152,7 +152,7 @@ jobs:
         
         echo "✅ Auto-merge enabled for PR #${{ steps.create_pr.outputs.pr_number }}"
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN_WRITE }}
     
     - name: Create workflow summary
       run: |
