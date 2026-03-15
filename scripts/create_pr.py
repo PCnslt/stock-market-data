@@ -87,9 +87,30 @@ def create_branch(day_type, activity_type):
     return branch_name
 
 def push_branch(branch_name):
-    """Push branch to remote"""
+    """Push branch to remote using GitHub token"""
+    # Get GitHub token from environment
+    github_token = os.environ.get('GITHUB_TOKEN', '')
+    
+    if github_token:
+        # Use token in git URL for authentication
+        # First, get the current remote URL
+        returncode, stdout, stderr = run_command("git config --get remote.origin.url")
+        if returncode == 0:
+            remote_url = stdout.strip()
+            # Convert to token-based URL if not already
+            if 'github.com' in remote_url and 'x-access-token' not in remote_url:
+                # Convert https://github.com/owner/repo to https://x-access-token:TOKEN@github.com/owner/repo
+                repo_path = remote_url.replace('https://github.com/', '')
+                token_url = f"https://x-access-token:{github_token}@github.com/{repo_path}"
+                # Temporarily set remote URL with token
+                run_command(f"git remote set-url origin {token_url}")
+    
     cmd = f"git push origin {branch_name}"
     returncode, stdout, stderr = run_command(cmd)
+    
+    # Restore original remote URL if we changed it
+    if github_token and 'remote_url' in locals():
+        run_command(f"git remote set-url origin {remote_url}")
     
     if returncode != 0:
         print(f"Error pushing branch: {stderr}")
