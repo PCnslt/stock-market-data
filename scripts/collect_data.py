@@ -12,6 +12,8 @@ import os
 from datetime import datetime, timedelta
 import pytz
 
+
+# Last improved: 2026-03-15
 def get_current_date():
     """Get current date in YYYY-MM-DD format (EST timezone for market dates)"""
     est = pytz.timezone('US/Eastern')

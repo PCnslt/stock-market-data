@@ -10,6 +10,7 @@ import json
 from datetime import datetime
 import pytz
 import sys
+import re
 
 def run_command(cmd, cwd=None):
     """Run a shell command and return output"""
@@ -133,6 +134,16 @@ Weekly maintenance and improvement tasks to ensure code quality and data accurac
     
     if returncode == 0:
         print(f"✅ Pull Request created: {stdout.strip()}")
+        
+        # Extract PR number from output (format: "https://github.com/owner/repo/pull/123")
+        import re
+        match = re.search(r'/pull/(\d+)', stdout)
+        if match:
+            pr_number = match.group(1)
+            # Set output for GitHub Actions
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+                print(f'pr_number={pr_number}', file=fh)
+            return pr_number
         return stdout.strip()
     else:
         # Fallback: Provide manual instructions
@@ -142,8 +153,8 @@ Weekly maintenance and improvement tasks to ensure code quality and data accurac
         print(f"   Base: main")
         print(f"   Body: {body[:100]}...")
         
-        # Return a placeholder for auto-merge attempt
-        return f"manual-pr-{branch_name}"
+        # Return empty for no auto-merge
+        return ""
 
 def auto_merge_pr(pr_url_or_id):
     """Attempt to auto-merge the PR"""
@@ -206,10 +217,6 @@ def main():
         print("❌ Failed to create PR")
         return False
     
-    # Attempt auto-merge (commented out for now)
-    # print("\nAttempting auto-merge...")
-    # auto_merge_pr(pr_result)
-    
     print("\n" + "=" * 60)
     print("✅ PR CREATION COMPLETED")
     print("=" * 60)
@@ -219,10 +226,12 @@ def main():
     print(f"- PR: {pr_result}")
     print(f"- Changes: {len(changes_list.splitlines())} files")
     
-    print("\nNext steps:")
-    print("1. Review the PR on GitHub")
-    print("2. Merge if changes look good")
-    print("3. Branch will be deleted after merge")
+    if pr_result and pr_result.isdigit():
+        print(f"\n✅ PR #{pr_result} created successfully!")
+        print("Auto-merge will be attempted by GitHub Actions workflow.")
+    else:
+        print("\n⚠️  Manual PR creation needed.")
+        print("Auto-merge cannot be performed automatically.")
     
     return True
 
