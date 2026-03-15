@@ -45,6 +45,21 @@ def create_branch(day_type, activity_type):
     elif commit_type == 'end_of_day':
         branch_name = f"end_of_day/{current_date}/{current_time}"
         commit_message = f"End-of-day data collection for {current_date} at {current_time} EST"
+    elif commit_type == 'weekend_historical':
+        branch_name = f"weekend/historical/{current_date}"
+        commit_message = f"Weekend historical data collection for {current_date}"
+    elif commit_type == 'weekend_news':
+        branch_name = f"weekend/news/{current_date}"
+        commit_message = f"Weekend news & sentiment data for {current_date}"
+    elif commit_type == 'weekend_alternative':
+        branch_name = f"weekend/alternative/{current_date}"
+        commit_message = f"Weekend alternative data collection for {current_date}"
+    elif commit_type == 'weekend_summary':
+        branch_name = f"weekend/summary/{current_date}"
+        commit_message = f"Weekend weekly summary for {current_date}"
+    elif commit_type == 'weekend_all':
+        branch_name = f"weekend/all/{current_date}"
+        commit_message = f"Weekend comprehensive data collection for {current_date}"
     elif day_type == 'saturday':
         branch_name = f"saturday/weekly_summary/{current_date}"
         commit_message = f"Weekly summary for {current_date}"
@@ -184,6 +199,146 @@ Automated mid-day analysis as part of triple daily market monitoring system.
 
 ### Notes:
 Automated end-of-day data collection as part of triple daily market monitoring system.
+"""
+    elif commit_type.startswith('weekend_'):
+        # Weekend data collection
+        weekend_type = commit_type.replace('weekend_', '')
+        title = f"Weekend {weekend_type.title()} Data: {current_date}"
+        
+        if weekend_type == 'historical':
+            body = f"""## Weekend Historical Data Collection
+
+**Date:** {current_date}
+**Type:** Weekend historical data backfill
+
+### Changes:
+- Collected full week's historical price data
+- Backfilled any missing data points
+- Updated historical database
+- Added technical indicators for week
+
+### Files Added:
+- `data/weekend/{current_date}/historical/historical_backfill.json`
+- `data/weekend/{current_date}/historical/technical_indicators.json`
+- `data/weekend/{current_date}/historical/price_history.json`
+
+### Value Provided:
+- Complete historical data for analysis
+- Data quality improvement
+- Backtesting dataset enhancement
+- Missing data recovery
+
+### Notes:
+Automated weekend historical data collection for comprehensive market analysis.
+"""
+        elif weekend_type == 'news':
+            body = f"""## Weekend News & Sentiment Data
+
+**Date:** {current_date}
+**Type:** Weekend news and sentiment analysis
+
+### Changes:
+- Collected weekend financial news
+- Analyzed news sentiment
+- Updated sentiment indicators
+- Added analyst reports and commentary
+
+### Files Added:
+- `data/weekend/{current_date}/news/weekend_news.json`
+- `data/weekend/{current_date}/news/sentiment_analysis.json`
+- `data/weekend/{current_date}/news/analyst_reports.json`
+
+### Value Provided:
+- Weekend market sentiment analysis
+- News impact assessment for Monday
+- Analyst insight aggregation
+- Sentiment-based trading signals
+
+### Notes:
+Automated weekend news collection for Monday market preparation.
+"""
+        elif weekend_type == 'alternative':
+            body = f"""## Weekend Alternative Data Collection
+
+**Date:** {current_date}
+**Type:** Weekend alternative data sources
+
+### Changes:
+- Collected economic indicators
+- Updated SEC filings database
+- Added global market data
+- Gathered social media sentiment
+
+### Files Added:
+- `data/weekend/{current_date}/economic/economic_indicators.json`
+- `data/weekend/{current_date}/sec_filings/sec_filings.json`
+- `data/weekend/{current_date}/global/global_markets.json`
+- `data/weekend/{current_date}/social/sentiment_analysis.json`
+
+### Value Provided:
+- Alternative data for predictive models
+- Economic indicator tracking
+- Company filing monitoring
+- Global market correlation analysis
+
+### Notes:
+Automated weekend alternative data collection for enhanced market prediction.
+"""
+        elif weekend_type == 'summary':
+            body = f"""## Weekend Weekly Summary
+
+**Date:** {current_date}
+**Type:** Weekly market summary and analysis
+
+### Changes:
+- Generated weekly performance summary
+- Analyzed market trends
+- Created sector performance report
+- Prepared next week outlook
+
+### Files Added:
+- `data/weekend/{current_date}/summaries/weekly_summary.json`
+- `data/weekend/{current_date}/summaries/sector_performance.json`
+- `data/weekend/{current_date}/summaries/market_trends.json`
+- `data/weekend/{current_date}/summaries/next_week_outlook.json`
+
+### Value Provided:
+- Comprehensive weekly market review
+- Performance benchmarking
+- Trend identification
+- Strategic planning for next week
+
+### Notes:
+Automated weekend weekly summary for strategic market analysis.
+"""
+        else:  # weekend_all or other weekend types
+            body = f"""## Weekend Comprehensive Data Collection
+
+**Date:** {current_date}
+**Type:** Complete weekend data collection
+
+### Changes:
+- Historical data backfill and validation
+- News and sentiment analysis
+- Alternative data collection
+- Weekly summary generation
+- Data quality checks and cleanup
+
+### Files Added:
+- `data/weekend/{current_date}/historical/*.json`
+- `data/weekend/{current_date}/news/*.json`
+- `data/weekend/{current_date}/economic/*.json`
+- `data/weekend/{current_date}/summaries/*.json`
+- `data/weekend/{current_date}/collection_summary.json`
+
+### Value Provided:
+- Complete weekend data ecosystem
+- Enhanced data quality and coverage
+- Monday market preparation
+- Comprehensive analysis foundation
+
+### Notes:
+Automated comprehensive weekend data collection for complete market monitoring.
 """
     elif day_type == 'saturday':
         title = f"Weekly Summary: {current_date}"
