@@ -2,6 +2,7 @@ name: Triple Daily Market Data Collection
 
 on:
   schedule:
+    # WEEKDAYS: Market data collection
     # Commit 1: Pre-market data (8:00 AM UTC / 3:00 AM EST)
     - cron: '0 8 * * 1-5'
     
@@ -10,6 +11,19 @@ on:
     
     # Commit 3: End-of-day data (9:00 PM UTC / 4:00 PM EST)
     - cron: '0 21 * * 1-5'
+    
+    # WEEKENDS: Alternative data collection & processing
+    # Saturday 10:00 AM UTC: Weekly historical data & backfill
+    - cron: '0 10 * * 6'
+    
+    # Saturday 2:00 PM UTC: News & sentiment data collection
+    - cron: '0 14 * * 6'
+    
+    # Sunday 10:00 AM UTC: Alternative data sources
+    - cron: '0 10 * * 0'
+    
+    # Sunday 2:00 PM UTC: Data processing & weekly summaries
+    - cron: '0 14 * * 0'
     
   workflow_dispatch:  # Allow manual triggering
     inputs:
@@ -45,34 +59,72 @@ jobs:
     - name: Determine commit type based on schedule
       id: commit_type
       run: |
-        # Get current UTC hour
+        # Get current UTC hour and day of week (1=Monday, 7=Sunday)
         CURRENT_HOUR=$(date -u +%H)
+        DAY_OF_WEEK=$(date -u +%u)  # 1-7 (Monday=1, Sunday=7)
         echo "Current UTC hour: $CURRENT_HOUR"
+        echo "Day of week: $DAY_OF_WEEK (1=Monday, 7=Sunday)"
         
-        # Determine commit type based on hour
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          # Manual trigger - use input
-          COMMIT_TYPE="${{ github.event.inputs.commit_type }}"
-          if [ "$COMMIT_TYPE" == "all" ]; then
-            # For manual "all", run based on current hour
-            if [ $CURRENT_HOUR -lt 12 ]; then
-              COMMIT_TYPE="pre_market"
-            elif [ $CURRENT_HOUR -lt 17 ]; then
-              COMMIT_TYPE="mid_day"
+        # Check if it's weekend (Saturday=6, Sunday=7)
+        if [ $DAY_OF_WEEK -ge 6 ]; then
+          # WEEKEND SCHEDULE
+          echo "Weekend detected - using weekend schedule"
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Manual trigger - use input
+            COMMIT_TYPE="${{ github.event.inputs.commit_type }}"
+            if [ "$COMMIT_TYPE" == "all" ]; then
+              # For manual "all" on weekend, run all weekend collections
+              COMMIT_TYPE="weekend_all"
+            fi
+          else
+            # Scheduled weekend run - determine by hour
+            if [ $CURRENT_HOUR -eq 10 ]; then
+              # 10:00 AM UTC - Saturday: historical, Sunday: alternative data
+              if [ $DAY_OF_WEEK -eq 6 ]; then
+                COMMIT_TYPE="weekend_historical"
+              else
+                COMMIT_TYPE="weekend_alternative"
+              fi
+            elif [ $CURRENT_HOUR -eq 14 ]; then
+              # 2:00 PM UTC - Saturday: news, Sunday: summary
+              if [ $DAY_OF_WEEK -eq 6 ]; then
+                COMMIT_TYPE="weekend_news"
+              else
+                COMMIT_TYPE="weekend_summary"
+              fi
             else
-              COMMIT_TYPE="end_of_day"
+              COMMIT_TYPE="weekend_all"
             fi
           fi
         else
-          # Scheduled run - determine by hour
-          if [ $CURRENT_HOUR -eq 8 ]; then
-            COMMIT_TYPE="pre_market"
-          elif [ $CURRENT_HOUR -eq 13 ]; then
-            COMMIT_TYPE="mid_day"
-          elif [ $CURRENT_HOUR -eq 21 ]; then
-            COMMIT_TYPE="end_of_day"
+          # WEEKDAY SCHEDULE
+          echo "Weekday detected - using weekday schedule"
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Manual trigger - use input
+            COMMIT_TYPE="${{ github.event.inputs.commit_type }}"
+            if [ "$COMMIT_TYPE" == "all" ]; then
+              # For manual "all", run based on current hour
+              if [ $CURRENT_HOUR -lt 12 ]; then
+                COMMIT_TYPE="pre_market"
+              elif [ $CURRENT_HOUR -lt 17 ]; then
+                COMMIT_TYPE="mid_day"
+              else
+                COMMIT_TYPE="end_of_day"
+              fi
+            fi
           else
-            COMMIT_TYPE="unknown"
+            # Scheduled weekday run - determine by hour
+            if [ $CURRENT_HOUR -eq 8 ]; then
+              COMMIT_TYPE="pre_market"
+            elif [ $CURRENT_HOUR -eq 13 ]; then
+              COMMIT_TYPE="mid_day"
+            elif [ $CURRENT_HOUR -eq 21 ]; then
+              COMMIT_TYPE="end_of_day"
+            else
+              COMMIT_TYPE="unknown"
+            fi
           fi
         fi
         
@@ -108,6 +160,62 @@ jobs:
         python collect_data.py
       env:
         COMMIT_TYPE: end_of_day
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+    
+    # WEEKEND COLLECTIONS
+    - name: Run Weekend Historical Collection
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_historical'
+      run: |
+        cd scripts
+        python weekend_collection.py
+      env:
+        COMMIT_TYPE: weekend_historical
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+    
+    - name: Run Weekend News Collection
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_news'
+      run: |
+        cd scripts
+        python weekend_collection.py
+      env:
+        COMMIT_TYPE: weekend_news
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+    
+    - name: Run Weekend Alternative Data Collection
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_alternative'
+      run: |
+        cd scripts
+        python weekend_collection.py
+      env:
+        COMMIT_TYPE: weekend_alternative
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+    
+    - name: Run Weekend Summary Collection
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_summary'
+      run: |
+        cd scripts
+        python weekend_collection.py
+      env:
+        COMMIT_TYPE: weekend_summary
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+    
+    - name: Run All Weekend Collections
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_all'
+      run: |
+        cd scripts
+        python weekend_collection.py
+      env:
+        COMMIT_TYPE: weekend_all
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
         FMP_KEY: ${{ secrets.FMP_KEY }}
         NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
