@@ -174,8 +174,75 @@ python collect_data.py
 The repository uses GitHub Actions to automatically collect data daily at 9:00 PM UTC.
 
 ## 📈 Data Sources
-- Yahoo Finance (via yfinance library)
-- Real-time market data
+
+### Primary Data Sources
+
+**1. Yahoo Finance (via yfinance library)**
+- Real-time and historical stock prices
+- Company fundamentals and financials
+- Market movers and sector data
+- Cryptocurrency prices
+
+**2. Alternative Free APIs (2026)**
+
+| API | Free Tier Limits | Key Features | Best For |
+|-----|------------------|--------------|----------|
+| **Alpha Vantage** | 5 calls/min, 500/day | 50+ technical indicators, real-time & historical | Technical analysis, indicators |
+| **Financial Modeling Prep** | 250 requests/day | Deep fundamental data, financial statements | Fundamental analysis |
+| **Finnhub** | 60 calls/min, 500k/month | Real-time via WebSockets, institutional data | Real-time trading, fundamentals |
+| **EODHD** | 20 requests/day | 30+ years historical, fundamental data | Historical analysis, backtesting |
+| **Marketstack** | 100 requests/month | Global coverage, 30k+ tickers | International markets |
+| **Twelve Data** | 800 requests/day | 100+ technical indicators, global | Technical analysis, global data |
+| **Polygon.io** | 5 calls/min | High-frequency, real-time US markets | Intraday trading |
+
+### Alternative Data Sources for Enhanced Prediction
+
+**3. SEC Filings & Regulatory Data**
+- **EDGAR Database** (SEC.gov) - Free access to all filings
+- **Form 8-K** - Major events (CEO changes, bankruptcies, acquisitions)
+- **Form 10-K/10-Q** - Annual/quarterly financial reports
+- **Form 4** - Insider trading activity
+- **Form 13F** - Institutional holdings
+
+**4. News & Social Media Sentiment**
+- **News APIs**: NewsAPI.org, GDELT Project
+- **Social Media**: Twitter/X API, Reddit API
+- **Sentiment Analysis**: VADER, TextBlob, custom NLP models
+- **Web Scraping**: BeautifulSoup, Scrapy for financial news sites
+
+**5. Alternative Data Categories**
+- **Credit Card Transaction Data** - Consumer spending patterns
+- **Satellite & Geospatial Data** - Parking lot traffic, shipping activity
+- **Supply Chain Data** - Shipping movements, logistics
+- **Weather Data** - Impact on agriculture, energy, retail
+- **App Usage & Web Traffic** - Digital engagement metrics
+- **Employment Data** - Job postings, hiring trends
+
+**6. Economic & Macro Data**
+- **Federal Reserve Economic Data (FRED)** - 800,000+ economic time series
+- **Bureau of Labor Statistics (BLS)** - Employment, inflation data
+- **Bureau of Economic Analysis (BEA)** - GDP, trade data
+- **World Bank Open Data** - Global economic indicators
+
+### Data Collection Strategy
+
+**Phase 1: Core Market Data** ✅
+- Yahoo Finance (yfinance) - Basic prices and fundamentals
+
+**Phase 2: Enhanced APIs** 🔄
+- Alpha Vantage - Technical indicators
+- Financial Modeling Prep - Deep fundamentals
+- Multiple API integration for redundancy
+
+**Phase 3: Alternative Data** 📋
+- SEC filings scraping
+- News sentiment analysis
+- Social media monitoring
+
+**Phase 4: Specialized Data** 📋
+- Economic indicators
+- Geospatial/satellite data
+- Supply chain analytics
 
 ## 📅 Update Schedule
 
@@ -195,40 +262,73 @@ This repository is automatically maintained. For issues or suggestions, please o
 
 ## 🗺️ Implementation Roadmap
 
-### Phase 1: Core Data Collection (Current)
-✅ **Completed**
-- Basic market movers (gainers, losers, most active)
-- Major market indices
-- Daily automation via GitHub Actions
-- PR workflow with auto-merge
+### Phase 1: Core Data Collection (Current) ✅
+**Status:** ✅ **COMPLETE AND OPERATIONAL**
+- **Data Sources:** Yahoo Finance (yfinance)
+- **Automation:** GitHub Actions daily workflow
+- **PR System:** Auto-merge enabled
+- **Data Collected:**
+  - Top Gainers/Losers/Most Active
+  - Major US Market Indices
+  - Basic company information
 
-### Phase 2: Enhanced Fundamentals (Next)
-**Additional Data Points:**
-1. **Company Fundamentals** - PE ratios, market cap, dividend yields
-2. **Sector Performance** - All 11 GICS sectors
-3. **Extended Market Indices** - Russell 2000, VIX, sector ETFs
-4. **Cryptocurrency Markets** - Top 10 cryptos by market cap
+### Phase 2: Enhanced Data Sources & Fundamentals 🔄
+**Status:** 🔄 **IN DEVELOPMENT**
+**Primary Goal:** Diversify data sources and enhance fundamentals
 
-### Phase 3: Advanced Analytics
-**Technical & Sentiment:**
-5. **Technical Indicators** - Moving averages, RSI, MACD
-6. **Options Market Data** - Most active options, unusual activity
-7. **Market Sentiment** - News analysis, social media trends
-8. **Economic Indicators** - Fear & Greed index, put/call ratio
+**Data Source Expansion:**
+1. **Alpha Vantage API** - 50+ technical indicators
+2. **Financial Modeling Prep** - Deep fundamental data
+3. **Multiple API Integration** - Redundancy and data validation
 
-### Phase 4: Global Expansion
-**International Markets:**
-9. **Global Indices** - FTSE, DAX, Nikkei, Hang Seng, Shanghai
-10. **Commodities & Futures** - Gold, oil, treasury yields
-11. **Company Fundamentals** - Top 50 S&P 500 companies
-12. **IPO Tracking** - Recent IPOs and performance
+**Enhanced Data Collection:**
+4. **Company Fundamentals** - PE ratios, market cap, dividend yields, financial statements
+5. **Sector Performance** - All 11 GICS sectors with ETFs
+6. **Extended Market Coverage** - Russell 2000, VIX, sector ETFs
+7. **Cryptocurrency Markets** - Top 10 cryptos by market cap
 
-### Phase 5: Machine Learning Integration
-**Predictive Analytics:**
-- Stock price prediction models
-- Market trend analysis
-- Anomaly detection
-- Portfolio optimization
+### Phase 3: Alternative Data Integration 📋
+**Status:** 📋 **PLANNED**
+**Primary Goal:** Incorporate alternative data for predictive edge
+
+**Alternative Data Sources:**
+8. **SEC Filings** - EDGAR database scraping (8-K, 10-K, Form 4)
+9. **News Sentiment** - Financial news analysis and scoring
+10. **Social Media Monitoring** - Twitter/Reddit sentiment analysis
+11. **Economic Indicators** - FRED, BLS, BEA data integration
+12. **Options Market Data** - Most active options, unusual activity
+
+### Phase 4: Advanced Analytics & Global Expansion 📋
+**Status:** 📋 **PLANNED**
+**Primary Goal:** Global coverage and sophisticated analytics
+
+**Global Data:**
+13. **International Markets** - FTSE, DAX, Nikkei, Hang Seng, Shanghai
+14. **Commodities & Futures** - Gold, oil, agricultural, treasury yields
+15. **Specialized Data** - Weather, geospatial, supply chain data
+
+**Analytics Enhancement:**
+16. **Technical Indicators** - Moving averages, RSI, MACD, Bollinger Bands
+17. **Market Sentiment** - Fear & Greed index, put/call ratio
+18. **IPO Tracking** - Recent IPOs and performance analysis
+
+### Phase 5: Machine Learning & Predictive Models 📋
+**Status:** 📋 **PLANNED**
+**Primary Goal:** Build predictive trading models
+
+**ML Integration:**
+- **Stock Price Prediction** - LSTM, Random Forest, XGBoost models
+- **Market Trend Analysis** - Time series forecasting
+- **Anomaly Detection** - Unusual market activity identification
+- **Portfolio Optimization** - Risk-adjusted return maximization
+- **Feature Engineering** - Create predictive features from collected data
+- **Backtesting Framework** - Historical performance validation
+
+### Data Source Strategy
+**Multi-Source Validation:** Use 3+ data sources for critical data points
+**Redundancy:** If one API fails, fall back to alternatives
+**Data Quality:** Implement validation and cleaning pipelines
+**Cost Optimization:** Balance free tier limits across multiple APIs
 
 ## 🎯 Current Status
 - **Phase 1:** ✅ Complete and operational
