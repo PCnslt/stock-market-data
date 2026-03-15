@@ -39,9 +39,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GH_TOKEN_WRITE }}
-        persist-credentials: true
     
     - name: Set up Python
       uses: actions/setup-python@v5
