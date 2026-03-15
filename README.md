@@ -2,6 +2,8 @@
 
 A daily collection of stock market data including top gainers, losers, and most active stocks.
 
+**Last updated:** 2026-03-15
+
 ## 📊 Data Collected Daily
 
 ### 1. Top Gainers
@@ -76,9 +78,17 @@ The repository uses GitHub Actions to automatically collect data daily at 9:00 P
 - Real-time market data
 
 ## 📅 Update Schedule
-- **Daily at 21:00 UTC** (4:00 PM EST, 1:00 PM PST)
-- Weekdays only (Monday-Friday)
-- Market hours data collection
+
+### Daily Workflow
+- **Weekdays (Mon-Fri)**: Stock market data collection via Pull Requests
+- **Saturdays**: Weekly summary and analysis via Pull Requests  
+- **Sundays**: Code improvements and maintenance via Pull Requests
+- **Schedule**: Daily at 21:00 UTC (4:00 PM EST, 1:00 PM PST)
+
+### PR Automation
+- Automated Pull Request creation for daily updates
+- Different activity types for each day of the week
+- Manual review and merge required (auto-merge can be configured)
 
 ## 🤝 Contributing
 This repository is automatically maintained. For issues or suggestions, please open an issue.

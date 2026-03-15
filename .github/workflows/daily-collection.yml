@@ -1,9 +1,9 @@
-name: Daily Stock Data Collection
+name: Daily Stock Data Collection with PRs
 
 on:
   schedule:
     # Run at 9:00 PM UTC daily (4:00 PM EST, 1:00 PM PST)
-    - cron: '0 21 * * 1-5'
+    - cron: '0 21 * * *'
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
@@ -26,29 +26,62 @@ jobs:
         cd scripts
         pip install -r requirements.txt
     
-    - name: Collect stock market data
+    - name: Determine day type
+      id: day_check
+      run: |
+        DAY_OF_WEEK=$(date -u +%u)  # 1=Monday, 7=Sunday
+        echo "DAY_OF_WEEK=$DAY_OF_WEEK" >> $GITHUB_OUTPUT
+        
+        if [ $DAY_OF_WEEK -ge 1 ] && [ $DAY_OF_WEEK -le 5 ]; then
+          echo "DAY_TYPE=weekday" >> $GITHUB_OUTPUT
+          echo "ACTIVITY_TYPE=data_collection" >> $GITHUB_OUTPUT
+        elif [ $DAY_OF_WEEK -eq 6 ]; then
+          echo "DAY_TYPE=saturday" >> $GITHUB_OUTPUT
+          echo "ACTIVITY_TYPE=weekly_summary" >> $GITHUB_OUTPUT
+        else
+          echo "DAY_TYPE=sunday" >> $GITHUB_OUTPUT
+          echo "ACTIVITY_TYPE=code_improvement" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Weekday - Collect stock market data
+      if: steps.day_check.outputs.DAY_TYPE == 'weekday'
       run: |
         cd scripts
         python collect_data.py
+    
+    - name: Saturday - Generate weekly summary
+      if: steps.day_check.outputs.DAY_TYPE == 'saturday'
+      run: |
+        cd scripts
+        python weekly_summary.py
+    
+    - name: Sunday - Code improvements
+      if: steps.day_check.outputs.DAY_TYPE == 'sunday'
+      run: |
+        cd scripts
+        python sunday_improvements.py
     
     - name: Configure Git
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
     
-    - name: Commit and push changes
+    - name: Create Pull Request
       run: |
         cd scripts
-        python update_repo.py
+        python create_pr.py
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DAY_TYPE: ${{ steps.day_check.outputs.DAY_TYPE }}
+        ACTIVITY_TYPE: ${{ steps.day_check.outputs.ACTIVITY_TYPE }}
     
     - name: Create summary
       run: |
         echo "## Stock Market Data Update" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "✅ Data collection completed successfully!" >> $GITHUB_STEP_SUMMARY
+        echo "**Day Type:** ${{ steps.day_check.outputs.DAY_TYPE }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Activity:** ${{ steps.day_check.outputs.ACTIVITY_TYPE }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Date:** $(date -u +'%Y-%m-%d')" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Pull Request created successfully!" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Data has been saved to the repository and committed." >> $GITHUB_STEP_SUMMARY
+        echo "A PR has been created with today's updates." >> $GITHUB_STEP_SUMMARY
