@@ -3,6 +3,7 @@
 Quick API integration test
 """
 
+import os
 import requests
 import json
 from datetime import datetime
@@ -10,7 +11,7 @@ from datetime import datetime
 def test_alpha_vantage():
     """Test Alpha Vantage API"""
     print("Testing Alpha Vantage API...")
-    api_key = "LNPH1SNZM9C4MT0"
+    api_key = os.environ.get("ALPHA_VANTAGE_KEY", "")
     
     try:
         # Test with AAPL
@@ -38,7 +39,7 @@ def test_alpha_vantage():
 def test_financial_modeling_prep():
     """Test Financial Modeling Prep API"""
     print("Testing Financial Modeling Prep API...")
-    api_key = "R2vOmTkc2r4FmlqUtDZbyifARUPa8nfM"
+    api_key = os.environ.get("FMP_KEY", "")
     
     try:
         url = f"https://financialmodelingprep.com/api/v3/quote/AAPL?apikey={api_key}"
@@ -64,7 +65,7 @@ def test_financial_modeling_prep():
 def test_newsapi():
     """Test NewsAPI"""
     print("Testing NewsAPI...")
-    api_key = "24143dca93d94a66b73fc8a33c014fb2"
+    api_key = os.environ.get("NEWSAPI_KEY", "")
     
     try:
         url = f"https://newsapi.org/v2/everything?q=Apple&apiKey={api_key}"

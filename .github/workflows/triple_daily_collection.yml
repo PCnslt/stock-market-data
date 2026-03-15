@@ -38,6 +38,12 @@ jobs:
         cd scripts
         pip install -r requirements.txt
     
+    - name: Set up API environment variables
+      run: |
+        echo "ALPHA_VANTAGE_KEY=${{ secrets.ALPHA_VANTAGE_KEY }}" >> $GITHUB_ENV
+        echo "FMP_KEY=${{ secrets.FMP_KEY }}" >> $GITHUB_ENV
+        echo "NEWSAPI_KEY=${{ secrets.NEWSAPI_KEY }}" >> $GITHUB_ENV
+    
     - name: Determine commit type based on schedule
       id: commit_type
       run: |
@@ -82,6 +88,9 @@ jobs:
         python pre_market_collection.py
       env:
         COMMIT_TYPE: pre_market
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
     
     - name: Run Mid-Day Analysis
       if: steps.commit_type.outputs.COMMIT_TYPE == 'mid_day'
@@ -90,6 +99,9 @@ jobs:
         python mid_day_analysis.py
       env:
         COMMIT_TYPE: mid_day
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
     
     - name: Run End-of-Day Collection
       if: steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day'
@@ -98,6 +110,9 @@ jobs:
         python collect_data.py
       env:
         COMMIT_TYPE: end_of_day
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
     
     - name: Configure Git
       run: |
