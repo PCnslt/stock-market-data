@@ -29,6 +29,33 @@ stock-market-data/
 | 13:00 | Mid-day | Morning session analysis |
 | 21:00 | End-of-day | Complete market data |
 
+**Note:** Collections run automatically on weekdays (Monday-Friday).
+
+## On-Demand Collection
+
+You can run data collection anytime:
+
+```bash
+# From the scripts directory
+cd scripts
+
+# Run all collection types
+python run_on_demand.py
+
+# Run specific type
+python run_on_demand.py --type pre_market
+python run_on_demand.py --type mid_day
+python run_on_demand.py --type end_of_day
+```
+
+### GitHub Actions Manual Trigger:
+1. Go to **Actions** → **Triple Daily Market Data Collection**
+2. Click **Run workflow**
+3. Select collection type
+4. Click **Run workflow**
+
+The on-demand script will fetch current market data and store it immediately.
+
 ## Available Data
 
 ### Pre-market Data
