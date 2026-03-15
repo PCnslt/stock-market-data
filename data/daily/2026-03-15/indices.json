@@ -1,0 +1,41 @@
+{
+  "date": "2026-03-15",
+  "indices": [
+    {
+      "symbol": "^GSPC",
+      "name": "S&P 500",
+      "price": 5150.45,
+      "change": 25.15,
+      "pct_change": 0.49
+    },
+    {
+      "symbol": "^DJI",
+      "name": "Dow Jones Industrial Average",
+      "price": 38542.32,
+      "change": 142.42,
+      "pct_change": 0.37
+    },
+    {
+      "symbol": "^IXIC",
+      "name": "NASDAQ Composite",
+      "price": 16215.67,
+      "change": 75.25,
+      "pct_change": 0.47
+    },
+    {
+      "symbol": "^RUT",
+      "name": "Russell 2000",
+      "price": 2050.89,
+      "change": 10.45,
+      "pct_change": 0.51
+    },
+    {
+      "symbol": "^VIX",
+      "name": "CBOE Volatility Index",
+      "price": 15.34,
+      "change": -0.32,
+      "pct_change": -2.05
+    }
+  ],
+  "updated_at": "2026-03-15T06:20:00Z"
+}

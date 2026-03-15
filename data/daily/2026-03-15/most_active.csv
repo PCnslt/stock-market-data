@@ -1,0 +1,11 @@
+symbol,name,price,change,volume
+SPY,SPDR S&P 500 ETF Trust,515.45,1.15,98765400
+QQQ,Invesco QQQ Trust,435.32,2.42,87654300
+IWM,iShares Russell 2000 ETF,195.67,0.75,76543200
+DIA,SPDR Dow Jones Industrial Average ETF,385.89,1.45,65432100
+TLT,iShares 20+ Year Treasury Bond ETF,92.34,-0.32,54321000
+GLD,SPDR Gold Shares,215.56,0.15,43210900
+SLV,iShares Silver Trust,24.12,0.42,32109800
+USO,United States Oil Fund,75.45,-1.25,21098700
+HYG,iShares iBoxx High Yield Corporate Bond ETF,76.32,0.07,10987600
+LQD,iShares iBoxx Investment Grade Corporate Bond ETF,115.78,-0.19,9876500

@@ -1,0 +1,11 @@
+symbol,name,price,change,pct_change,volume
+DIS,Walt Disney Company,95.45,-2.15,-2.24,34567800
+BA,Boeing Company,185.32,-3.42,-1.83,23456700
+GE,General Electric Company,145.67,-1.25,-0.86,12345600
+F,Ford Motor Company,12.34,-0.45,-3.25,45678900
+GM,General Motors Company,42.56,-0.32,-0.75,2345600
+T,AT&T Inc.,17.89,-0.15,-0.83,3456700
+VZ,Verizon Communications Inc.,40.12,-0.42,-1.04,1234500
+KO,Coca-Cola Company,60.45,-0.25,-0.41,4567800
+PEP,PepsiCo Inc.,175.32,-0.67,-0.38,2345670
+WMT,Walmart Inc.,165.78,-0.89,-0.53,3456780
