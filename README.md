@@ -1,5 +1,7 @@
 # Stock Market Data Repository
 
+This repository runs three times daily using GitHub Actions, automatically collecting and storing comprehensive stock market data for analysis and prediction.
+
 ## Project Structure
 
 ```
@@ -19,6 +21,83 @@ stock-market-data/
 │   └── requirements.txt
 └── .github/workflows/
     └── triple_daily_collection.yml
+```
+
+## Data Structure
+
+```
+data/
+├── pre_market/YYYY-MM-DD/
+│   ├── pre_market_movers.json
+│   │   ├── gainers[]           # Pre-market gainers with price, change, volume
+│   │   ├── losers[]            # Pre-market losers with price, change, volume
+│   │   └── most_active[]       # Most active pre-market stocks
+│   ├── futures.json
+│   │   ├── equity_futures[]    # S&P, Nasdaq, Dow futures
+│   │   ├── commodity_futures[] # Oil, gold, commodities
+│   │   └── bond_futures[]      # Treasury yields, bond futures
+│   ├── global_markets.json
+│   │   ├── asia[]              # Asian market performance
+│   │   ├── europe[]            # European market performance
+│   │   └── americas[]          # Americas market performance
+│   ├── economic_calendar.json
+│   │   ├── date                # Event date
+│   │   ├── events[]            # Economic events with time, importance
+│   │   └── impact_analysis     # Market impact assessment
+│   └── news_sentiment.json
+│       ├── overall_sentiment   # Bullish/neutral/bearish
+│       ├── positive_news[]     # Positive market news
+│       └── negative_news[]     # Negative market news
+├── mid_day/YYYY-MM-DD/
+│   ├── morning_performance.json
+│   │   ├── session_summary     # Morning session analysis
+│   │   ├── top_performers[]    # Best performing stocks
+│   │   └── sector_performance  # Sector-wise performance
+│   ├── volatility_analysis.json
+│   │   ├── vix_data            # Volatility index data
+│   │   ├── option_activity     # Options market analysis
+│   │   └── market_breadth      # Advance/decline ratios
+│   ├── sector_rotation.json
+│   │   ├── sector_changes[]    # Sector performance changes
+│   │   ├── money_flow          # Institutional money flow
+│   │   └── rotation_patterns   # Sector rotation analysis
+│   ├── technical_indicators.json
+│   │   ├── moving_averages     # MA crossovers, support/resistance
+│   │   ├── momentum_indicators # RSI, MACD, stochastic
+│   │   └── volume_analysis     # Volume patterns, accumulation
+│   ├── news_sentiment_update.json
+│   │   ├── breaking_news[]     # Mid-day news updates
+│   │   ├── sentiment_trend     # Sentiment direction
+│   │   └── market_reaction     # News impact analysis
+│   └── trading_insights.json
+│       ├── intraday_patterns   # Trading patterns identified
+│       ├── institutional_flow  # Large trade analysis
+│       └── market_microstructure # Order flow analysis
+└── daily/YYYY-MM-DD/
+    ├── market_summary.json
+    │   ├── indices[]           # Major indices performance
+    │   ├── volume_leaders[]    # Highest volume stocks
+    │   └── market_breadth      # Overall market health
+    ├── top_gainers.json
+    │   ├── gainers[]           # Daily top gainers (price, % change)
+    │   ├── breakout_stocks[]   # Technical breakout candidates
+    │   └── momentum_analysis   # Momentum characteristics
+    ├── top_losers.json
+    │   ├── losers[]            # Daily top losers
+    │   ├── oversold_stocks[]   # Potential bounce candidates
+    │   └── weakness_analysis   # Sector/stock weakness patterns
+    ├── sector_analysis.json
+    │   ├── sector_performance[] # All sectors ranked
+    │   ├── industry_leaders[]   # Top industries
+    │   └── rotation_summary    # Daily rotation summary
+    ├── technical_summary.json
+    │   ├── key_levels          # Support/resistance levels
+    │   ├── trend_analysis      # Market trend assessment
+    │   └── pattern_recognition # Chart patterns identified
+    └── prediction_features.json
+        ├── feature_engineering # ML-ready features
+        ├── target_variables    # Prediction targets (next day gainers)
+        └── model_inputs        # Prepared data for ML models
 ```
 
 ## Data Collection Schedule
