@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-03-15T08:16:36.395971",
+  "session": "morning",
+  "market_summary": {
+    "sp500_open": 5200.5,
+    "sp500_current": 5215.75,
+    "sp500_change": 15.25,
+    "sp500_change_percent": 0.29,
+    "volume_vs_average": "105%",
+    "advancers": 320,
+    "decliners": 180,
+    "unchanged": 0
+  },
+  "sector_performance": [
+    {
+      "sector": "Technology",
+      "etf": "XLK",
+      "change": 0.45,
+      "performance": "outperforming"
+    },
+    {
+      "sector": "Financials",
+      "etf": "XLF",
+      "change": 0.28,
+      "performance": "performing"
+    },
+    {
+      "sector": "Healthcare",
+      "etf": "XLV",
+      "change": 0.15,
+      "performance": "performing"
+    },
+    {
+      "sector": "Energy",
+      "etf": "XLE",
+      "change": -0.12,
+      "performance": "underperforming"
+    },
+    {
+      "sector": "Consumer Discretionary",
+      "etf": "XLY",
+      "change": 0.22,
+      "performance": "performing"
+    }
+  ],
+  "volume_leaders": [
+    {
+      "symbol": "SPY",
+      "name": "SPDR S&P 500 ETF",
+      "volume": 45000000,
+      "price": 521.55,
+      "change": 0.31
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "volume": 35000000,
+      "price": 183.25,
+      "change": 0.41
+    },
+    {
+      "symbol": "TSLA",
+      "name": "Tesla",
+      "volume": 28000000,
+      "price": 176.8,
+      "change": 0.91
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "volume": 25000000,
+      "price": 955.4,
+      "change": 0.48
+    }
+  ]
+}

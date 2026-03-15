@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-03-15T08:16:36.396239",
+  "vix_current": 14.8,
+  "vix_change": 0.55,
+  "vix_change_percent": 3.86,
+  "volatility_level": "low",
+  "put_call_ratio": 0.85,
+  "interpretation": "Moderate bullish sentiment",
+  "high_volatility_stocks": [
+    {
+      "symbol": "TSLA",
+      "name": "Tesla",
+      "volatility": "high",
+      "atr_percent": 3.2
+    },
+    {
+      "symbol": "MRNA",
+      "name": "Moderna",
+      "volatility": "high",
+      "atr_percent": 2.8
+    },
+    {
+      "symbol": "PLTR",
+      "name": "Palantir",
+      "volatility": "medium",
+      "atr_percent": 2.1
+    }
+  ]
+}

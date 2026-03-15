@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-03-15T08:16:36.396468",
+  "money_flow": {
+    "into_technology": 1.2,
+    "into_financials": 0.8,
+    "out_of_energy": -0.5,
+    "out_of_utilities": -0.3
+  },
+  "rotation_trends": [
+    {
+      "from_sector": "Defensive",
+      "to_sector": "Cyclical",
+      "strength": "moderate"
+    },
+    {
+      "from_sector": "Value",
+      "to_sector": "Growth",
+      "strength": "mild"
+    }
+  ],
+  "unusual_activity": [
+    {
+      "symbol": "JPM",
+      "sector": "Financials",
+      "unusual_volume": "250%",
+      "price_action": "breaking_out"
+    },
+    {
+      "symbol": "GOOGL",
+      "sector": "Technology",
+      "unusual_volume": "180%",
+      "price_action": "consolidating"
+    }
+  ]
+}

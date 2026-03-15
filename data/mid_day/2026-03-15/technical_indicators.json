@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-03-15T08:16:36.396608",
+  "market_breadth": {
+    "advance_decline": 1.78,
+    "new_highs": 45,
+    "new_lows": 12,
+    "breadth_strength": "positive"
+  },
+  "moving_averages": {
+    "sp500_above_50ma": true,
+    "sp500_above_200ma": true,
+    "percent_above_50ma": 72.5,
+    "percent_above_200ma": 68.3
+  },
+  "momentum_indicators": {
+    "rsi_sp500": 58.2,
+    "rsi_interpretation": "neutral",
+    "macd_signal": "bullish_crossover",
+    "stochastic": 65.4
+  }
+}

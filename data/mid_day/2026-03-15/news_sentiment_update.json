@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-03-15T08:16:36.396777",
+  "overall_sentiment": "slightly_positive",
+  "sentiment_change": "improved",
+  "key_news_events": [
+    "CPI data comes in slightly better than expected",
+    "Fed speakers maintain dovish tone",
+    "Tech earnings reports generally positive",
+    "Geopolitical tensions easing slightly"
+  ],
+  "social_media_trends": [
+    {
+      "topic": "#AIstocks",
+      "sentiment": "bullish",
+      "volume": "high"
+    },
+    {
+      "topic": "#FedDecision",
+      "sentiment": "neutral",
+      "volume": "medium"
+    },
+    {
+      "topic": "#EarningsSeason",
+      "sentiment": "mixed",
+      "volume": "high"
+    }
+  ]
+}
