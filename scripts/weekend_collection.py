@@ -291,20 +291,23 @@ def main():
     
     collected_files = []
     
-    # Always run these on weekends
-    if commit_type in ['all', 'historical']:
+    # Determine which collections to run based on commit_type
+    # Handle both with and without "weekend_" prefix for flexibility
+    commit_type_base = commit_type.replace('weekend_', '') if commit_type.startswith('weekend_') else commit_type
+    
+    if commit_type_base in ['all', 'historical', 'alternative']:
         collected_files.append(collect_historical_backfill(current_date))
     
-    if commit_type in ['all', 'news']:
+    if commit_type_base in ['all', 'news']:
         collected_files.append(collect_weekend_news(current_date))
     
-    if commit_type in ['all', 'economic']:
+    if commit_type_base in ['all', 'economic', 'alternative']:
         collected_files.append(collect_economic_indicators(current_date))
     
-    if commit_type in ['all', 'sec']:
+    if commit_type_base in ['all', 'sec', 'alternative']:
         collected_files.append(collect_sec_filings(current_date))
     
-    if commit_type in ['all', 'summary']:
+    if commit_type_base in ['all', 'summary']:
         collected_files.append(generate_weekly_summary(current_date))
     
     # Create collection summary
