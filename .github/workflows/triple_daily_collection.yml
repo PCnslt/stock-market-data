@@ -1,0 +1,184 @@
+name: Triple Daily Market Data Collection
+
+on:
+  schedule:
+    # Commit 1: Pre-market data (8:00 AM UTC / 3:00 AM EST)
+    - cron: '0 8 * * 1-5'
+    
+    # Commit 2: Mid-day analysis (1:00 PM UTC / 8:00 AM EST)
+    - cron: '0 13 * * 1-5'
+    
+    # Commit 3: End-of-day data (9:00 PM UTC / 4:00 PM EST)
+    - cron: '0 21 * * 1-5'
+    
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      commit_type:
+        description: 'Which commit to run (pre_market, mid_day, end_of_day)'
+        required: false
+        default: 'all'
+
+jobs:
+  collect-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        cd scripts
+        pip install -r requirements.txt
+    
+    - name: Determine commit type based on schedule
+      id: commit_type
+      run: |
+        # Get current UTC hour
+        CURRENT_HOUR=$(date -u +%H)
+        echo "Current UTC hour: $CURRENT_HOUR"
+        
+        # Determine commit type based on hour
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          # Manual trigger - use input
+          COMMIT_TYPE="${{ github.event.inputs.commit_type }}"
+          if [ "$COMMIT_TYPE" == "all" ]; then
+            # For manual "all", run based on current hour
+            if [ $CURRENT_HOUR -lt 12 ]; then
+              COMMIT_TYPE="pre_market"
+            elif [ $CURRENT_HOUR -lt 17 ]; then
+              COMMIT_TYPE="mid_day"
+            else
+              COMMIT_TYPE="end_of_day"
+            fi
+          fi
+        else
+          # Scheduled run - determine by hour
+          if [ $CURRENT_HOUR -eq 8 ]; then
+            COMMIT_TYPE="pre_market"
+          elif [ $CURRENT_HOUR -eq 13 ]; then
+            COMMIT_TYPE="mid_day"
+          elif [ $CURRENT_HOUR -eq 21 ]; then
+            COMMIT_TYPE="end_of_day"
+          else
+            COMMIT_TYPE="unknown"
+          fi
+        fi
+        
+        echo "COMMIT_TYPE=$COMMIT_TYPE" >> $GITHUB_OUTPUT
+        echo "Determined commit type: $COMMIT_TYPE"
+    
+    - name: Run Pre-Market Collection
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'pre_market'
+      run: |
+        cd scripts
+        python pre_market_collection.py
+      env:
+        COMMIT_TYPE: pre_market
+    
+    - name: Run Mid-Day Analysis
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'mid_day'
+      run: |
+        cd scripts
+        python mid_day_analysis.py
+      env:
+        COMMIT_TYPE: mid_day
+    
+    - name: Run End-of-Day Collection
+      if: steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day'
+      run: |
+        cd scripts
+        python collect_data.py
+      env:
+        COMMIT_TYPE: end_of_day
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+    
+    - name: Create Pull Request
+      id: create_pr
+      run: |
+        cd scripts
+        python create_pr.py
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COMMIT_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
+        DAY_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day' && 'weekday' || 'special' }}
+        ACTIVITY_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
+    
+    - name: Wait for checks to complete
+      if: steps.create_pr.outputs.pr_number != ''
+      run: |
+        echo "Waiting 30 seconds for checks to start..."
+        sleep 30
+        
+        # Wait up to 2 minutes for checks to complete
+        for i in {1..12}; do
+          echo "Check $i/12: Waiting 10 seconds..."
+          sleep 10
+        done
+    
+    - name: Auto-merge Pull Request
+      if: steps.create_pr.outputs.pr_number != ''
+      run: |
+        echo "Attempting to auto-merge PR #${{ steps.create_pr.outputs.pr_number }}"
+        
+        # Enable auto-merge with squash
+        gh pr merge ${{ steps.create_pr.outputs.pr_number }} --auto --squash --body "Automatically merged by GitHub Actions"
+        
+        echo "✅ Auto-merge enabled for PR #${{ steps.create_pr.outputs.pr_number }}"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create workflow summary
+      run: |
+        echo "## Triple Daily Market Data Update" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit Type:** ${{ steps.commit_type.outputs.COMMIT_TYPE }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Scheduled Time:** ${{ github.event.schedule }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        case "${{ steps.commit_type.outputs.COMMIT_TYPE }}" in
+          "pre_market")
+            echo "**Description:** Pre-market data collection including futures, global markets, and economic calendar." >> $GITHUB_STEP_SUMMARY
+            ;;
+          "mid_day")
+            echo "**Description:** Mid-day market analysis including morning performance, sector rotation, and trading insights." >> $GITHUB_STEP_SUMMARY
+            ;;
+          "end_of_day")
+            echo "**Description:** End-of-day market data including top gainers/losers, volume leaders, and complete analysis." >> $GITHUB_STEP_SUMMARY
+            ;;
+          *)
+            echo "**Description:** Unknown commit type." >> $GITHUB_STEP_SUMMARY
+            ;;
+        esac
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ steps.create_pr.outputs.pr_number }}" != "" ]; then
+          echo "✅ Pull Request #${{ steps.create_pr.outputs.pr_number }} created and auto-merge enabled!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The data has been collected and will be automatically merged when checks pass." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "⚠️  No changes to commit for this time slot." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This could be because:" >> $GITHUB_STEP_SUMMARY
+          echo "1. It's a weekend (no pre-market/mid-day data on weekends)" >> $GITHUB_STEP_SUMMARY
+          echo "2. No new data was available" >> $GITHUB_STEP_SUMMARY
+          echo "3. An error occurred during data collection" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Next Schedule:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Pre-market:** 8:00 AM UTC daily (weekdays)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Mid-day:** 1:00 PM UTC daily (weekdays)" >> $GITHUB_STEP_SUMMARY
+        echo "- **End-of-day:** 9:00 PM UTC daily (weekdays)" >> $GITHUB_STEP_SUMMARY

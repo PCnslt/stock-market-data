@@ -70,3 +70,10 @@ config.json
 *.pkl
 *.pickle
 *.parquet
+# Secure environment files
+secure_env.md
+.env
+.env.local
+.env.*.local
+secrets/
+keys/
