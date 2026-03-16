@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-03-16T08:55:30.935563",
+  "asia": [
+    {
+      "market": "Nikkei 225",
+      "symbol": "^N225",
+      "close": 38520.15,
+      "change": 120.15,
+      "change_percent": 0.31
+    },
+    {
+      "market": "Hang Seng",
+      "symbol": "^HSI",
+      "close": 16540.8,
+      "change": -45.2,
+      "change_percent": -0.27
+    },
+    {
+      "market": "Shanghai",
+      "symbol": "000001.SS",
+      "close": 3050.45,
+      "change": 8.45,
+      "change_percent": 0.28
+    }
+  ],
+  "europe": [
+    {
+      "market": "FTSE 100",
+      "symbol": "^FTSE",
+      "price": 7720.55,
+      "change": 22.55,
+      "change_percent": 0.29
+    },
+    {
+      "market": "DAX",
+      "symbol": "^GDAXI",
+      "price": 17920.4,
+      "change": 35.4,
+      "change_percent": 0.2
+    },
+    {
+      "market": "CAC 40",
+      "symbol": "^FCHI",
+      "price": 8150.25,
+      "change": 18.25,
+      "change_percent": 0.22
+    }
+  ]
+}
