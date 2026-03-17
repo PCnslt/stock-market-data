@@ -1,0 +1,12 @@
+{
+  "collection_time": "2026-03-17T08:53:19.628382",
+  "data_points_collected": 5,
+  "status": "success",
+  "files_created": [
+    "pre_market_movers.json",
+    "futures.json",
+    "global_markets.json",
+    "economic_calendar.json",
+    "news_sentiment.json"
+  ]
+}
