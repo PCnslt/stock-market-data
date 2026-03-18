@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-03-18T08:48:44.170857",
+  "overall_sentiment": "neutral",
+  "positive_news": [
+    "Fed indicates potential rate cuts later this year",
+    "Tech earnings beat expectations",
+    "Inflation shows signs of cooling"
+  ],
+  "negative_news": [
+    "Geopolitical tensions in Middle East",
+    "Consumer spending shows slowdown",
+    "Manufacturing data disappoints"
+  ],
+  "analyst_actions": [
+    {
+      "symbol": "AAPL",
+      "action": "upgrade",
+      "from": "Hold",
+      "to": "Buy",
+      "firm": "Morgan Stanley"
+    },
+    {
+      "symbol": "TSLA",
+      "action": "downgrade",
+      "from": "Buy",
+      "to": "Hold",
+      "firm": "Goldman Sachs"
+    }
+  ]
+}
