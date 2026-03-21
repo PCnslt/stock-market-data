@@ -1,0 +1,50 @@
+{
+  "collection_time": "2026-03-21T21:00:18.535832+00:00",
+  "data_type": "weekly_summary",
+  "week": "2026-03-14 to 2026-03-18",
+  "report_date": "2026-03-21",
+  "market_performance": {
+    "sp500_change": 1.8,
+    "nasdaq_change": 2.5,
+    "dow_change": 1.2,
+    "best_performing_sector": "Technology",
+    "worst_performing_sector": "Energy"
+  },
+  "data_collection_stats": {
+    "total_data_points": 1250,
+    "successful_collections": 98,
+    "failed_collections": 2,
+    "data_quality_score": 96.5
+  },
+  "top_gainers": [
+    "NVDA",
+    "TSLA",
+    "META"
+  ],
+  "top_losers": [
+    "WMT",
+    "KO",
+    "XOM"
+  ],
+  "most_volatile": [
+    "TSLA",
+    "NVDA",
+    "AMZN"
+  ],
+  "key_insights": [
+    "Technology sector outperformed by 2.5%",
+    "Energy sector under pressure due to oil price decline",
+    "Market volatility increased mid-week",
+    "Trading volume above average"
+  ],
+  "next_week_outlook": {
+    "expected_volatility": "medium",
+    "key_events": [
+      "FOMC Meeting",
+      "CPI Data",
+      "Earnings Season"
+    ],
+    "market_sentiment": "cautiously optimistic"
+  },
+  "status": "success"
+}
