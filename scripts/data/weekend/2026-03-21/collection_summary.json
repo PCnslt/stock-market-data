@@ -1,0 +1,11 @@
+{
+  "collection_time": "2026-03-21T10:22:01.924917+00:00",
+  "date": "2026-03-21",
+  "day_type": "weekend",
+  "commit_type": "weekend_historical",
+  "files_collected": [
+    "data/weekend/2026-03-21/historical/historical_backfill.json"
+  ],
+  "total_files": 1,
+  "status": "success"
+}
