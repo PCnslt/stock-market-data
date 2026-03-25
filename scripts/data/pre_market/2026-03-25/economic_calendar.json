@@ -1,0 +1,23 @@
+{
+  "date": "2026-03-25",
+  "events": [
+    {
+      "time": "08:30 EST",
+      "event": "CPI Inflation Data",
+      "country": "US",
+      "importance": "high"
+    },
+    {
+      "time": "10:00 EST",
+      "event": "Consumer Sentiment",
+      "country": "US",
+      "importance": "medium"
+    },
+    {
+      "time": "14:00 EST",
+      "event": "FOMC Meeting Minutes",
+      "country": "US",
+      "importance": "high"
+    }
+  ]
+}

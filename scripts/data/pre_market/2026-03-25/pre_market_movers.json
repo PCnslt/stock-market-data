@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-03-25T08:50:58.102409",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "TSLA",
+      "price": 383.03,
+      "change": 2.18,
+      "change_percent": 0.5724,
+      "volume": 60004909
+    }
+  ],
+  "losers": [],
+  "most_active": [
+    {
+      "symbol": "TSLA",
+      "price": 383.03,
+      "change": 2.18,
+      "change_percent": 0.5724,
+      "volume": 60004909
+    }
+  ]
+}
