@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-03-26T08:54:53.344298",
+  "es_future": {
+    "symbol": "ES",
+    "name": "S&P 500 Futures",
+    "price": 5215.5,
+    "change": 15.5,
+    "change_percent": 0.3
+  },
+  "nq_future": {
+    "symbol": "NQ",
+    "name": "NASDAQ Futures",
+    "price": 18250.75,
+    "change": 45.75,
+    "change_percent": 0.25
+  },
+  "ym_future": {
+    "symbol": "YM",
+    "name": "Dow Futures",
+    "price": 39500.25,
+    "change": 100.25,
+    "change_percent": 0.25
+  },
+  "vix_future": {
+    "symbol": "VIX",
+    "name": "Volatility Index",
+    "price": 14.25,
+    "change": -0.25,
+    "change_percent": -1.72
+  }
+}
