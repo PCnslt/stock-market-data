@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-03-31T08:58:17.481146",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "META",
+      "price": 536.38,
+      "change": 10.66,
+      "change_percent": 2.0277,
+      "volume": 22510519
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "GOOGL",
+      "price": 273.5,
+      "change": -0.84,
+      "change_percent": -0.3062,
+      "volume": 33827158
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "GOOGL",
+      "price": 273.5,
+      "change": -0.84,
+      "change_percent": -0.3062,
+      "volume": 33827158
+    },
+    {
+      "symbol": "META",
+      "price": 536.38,
+      "change": 10.66,
+      "change_percent": 2.0277,
+      "volume": 22510519
+    }
+  ]
+}
