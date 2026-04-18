@@ -1,10 +1,10 @@
 {
-  "collection_time": "2026-04-18T10:35:51.263099+00:00",
+  "collection_time": "2026-04-18T14:40:01.037800+00:00",
   "date": "2026-04-18",
   "day_type": "weekend",
-  "commit_type": "weekend_historical",
+  "commit_type": "weekend_news",
   "files_collected": [
-    "data/weekend/2026-04-18/historical/historical_backfill.json"
+    "data/weekend/2026-04-18/news/weekend_news.json"
   ],
   "total_files": 1,
   "status": "success"
