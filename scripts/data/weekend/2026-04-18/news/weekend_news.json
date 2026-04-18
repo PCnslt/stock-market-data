@@ -1,0 +1,38 @@
+{
+  "collection_time": "2026-04-18T14:40:01.037536+00:00",
+  "data_type": "weekend_news",
+  "date": "2026-04-18",
+  "news_count": 15,
+  "sources": [
+    "Reuters",
+    "Bloomberg",
+    "CNBC",
+    "WSJ",
+    "Financial Times"
+  ],
+  "articles": [
+    {
+      "title": "Fed Chair to Speak on Economic Outlook Monday",
+      "source": "Reuters",
+      "published": "2026-04-18T08:00:00Z",
+      "sentiment": "neutral",
+      "impact": "medium"
+    },
+    {
+      "title": "Tech Earnings Preview: What to Expect Next Week",
+      "source": "CNBC",
+      "published": "2026-04-18T10:30:00Z",
+      "sentiment": "positive",
+      "impact": "high"
+    },
+    {
+      "title": "Oil Prices Rise Amid Geopolitical Tensions",
+      "source": "Bloomberg",
+      "published": "2026-04-18T12:15:00Z",
+      "sentiment": "negative",
+      "impact": "medium"
+    }
+  ],
+  "overall_sentiment": "neutral",
+  "status": "success"
+}
