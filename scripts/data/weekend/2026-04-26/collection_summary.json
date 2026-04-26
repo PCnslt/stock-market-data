@@ -1,13 +1,11 @@
 {
-  "collection_time": "2026-04-26T10:44:22.203928+00:00",
+  "collection_time": "2026-04-26T14:53:41.163079+00:00",
   "date": "2026-04-26",
   "day_type": "weekend",
-  "commit_type": "weekend_alternative",
+  "commit_type": "weekend_summary",
   "files_collected": [
-    "data/weekend/2026-04-26/historical/historical_backfill.json",
-    "data/weekend/2026-04-26/economic/economic_indicators.json",
-    "data/weekend/2026-04-26/sec_filings/sec_filings.json"
+    "data/weekend/2026-04-26/summaries/weekly_summary.json"
   ],
-  "total_files": 3,
+  "total_files": 1,
   "status": "success"
 }
