@@ -1,0 +1,30 @@
+{
+  "collection_time": "2026-05-24T11:16:25.973558+00:00",
+  "data_type": "sec_filings",
+  "date": "2026-05-24",
+  "filings_count": 8,
+  "filings": [
+    {
+      "company": "Apple Inc.",
+      "symbol": "AAPL",
+      "filing_type": "10-K",
+      "filing_date": "2026-05-24",
+      "summary": "Annual report filing"
+    },
+    {
+      "company": "Microsoft Corporation",
+      "symbol": "MSFT",
+      "filing_type": "8-K",
+      "filing_date": "2026-05-24",
+      "summary": "Current report filing"
+    },
+    {
+      "company": "Tesla Inc.",
+      "symbol": "TSLA",
+      "filing_type": "10-Q",
+      "filing_date": "2026-05-24",
+      "summary": "Quarterly report filing"
+    }
+  ],
+  "status": "success"
+}
