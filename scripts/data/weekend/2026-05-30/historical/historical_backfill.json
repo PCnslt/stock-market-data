@@ -1,0 +1,17 @@
+{
+  "collection_time": "2026-05-30T11:17:00.320027+00:00",
+  "data_type": "historical_backfill",
+  "date": "2026-05-30",
+  "tickers_collected": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "TSLA",
+    "NVDA",
+    "META"
+  ],
+  "time_period": "1wk",
+  "data_points": 35,
+  "status": "success"
+}
