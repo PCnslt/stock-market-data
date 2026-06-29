@@ -2,307 +2,179 @@ name: Triple Daily Market Data Collection
 
 on:
   schedule:
-    # WEEKDAYS: Market data collection
-    # Commit 1: Pre-market data (8:00 AM UTC / 3:00 AM EST)
-    - cron: '0 8 * * 1-5'
-    
-    # Commit 2: Mid-day analysis (1:00 PM UTC / 8:00 AM EST)
-    - cron: '0 13 * * 1-5'
-    
-    # Commit 3: End-of-day data (9:00 PM UTC / 4:00 PM EST)
-    - cron: '0 21 * * 1-5'
-    
-    # WEEKENDS: Alternative data collection & processing
-    # Saturday 10:00 AM UTC: Weekly historical data & backfill
-    - cron: '0 10 * * 6'
-    
-    # Saturday 2:00 PM UTC: News & sentiment data collection
-    - cron: '0 14 * * 6'
-    
-    # Sunday 10:00 AM UTC: Alternative data sources
-    - cron: '0 10 * * 0'
-    
-    # Sunday 2:00 PM UTC: Data processing & weekly summaries
-    - cron: '0 14 * * 0'
-    
+    # NOTE: minutes are intentionally off the top of the hour. GitHub delays/drops
+    # scheduled runs most aggressively at :00 of popular hours. Commit type is
+    # selected from github.event.schedule below, so a delayed run still maps to the
+    # correct type (the old version keyed off the execution hour and silently did
+    # nothing whenever a run slipped past the hour boundary).
+
+    # WEEKDAYS
+    - cron: '17 8 * * 1-5'    # pre-market   (8:17 AM UTC)
+    - cron: '17 13 * * 1-5'   # mid-day      (1:17 PM UTC)
+    - cron: '17 21 * * 1-5'   # end-of-day   (9:17 PM UTC)
+
+    # WEEKENDS
+    - cron: '17 10 * * 6'     # Sat: weekend historical
+    - cron: '17 14 * * 6'     # Sat: weekend news
+    - cron: '17 10 * * 0'     # Sun: weekend alternative
+    - cron: '17 14 * * 0'     # Sun: weekend summary
+
   workflow_dispatch:  # Allow manual triggering
     inputs:
       commit_type:
-        description: 'Which commit to run (pre_market, mid_day, end_of_day)'
+        description: 'pre_market | mid_day | end_of_day | weekend_all | all'
         required: false
         default: 'all'
+
+permissions:
+  contents: write
 
 jobs:
   collect-data:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GH_TOKEN_WRITE }}
         persist-credentials: true
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-    
+
     - name: Install dependencies
-      run: |
-        cd scripts
-        pip install -r requirements.txt
-    
-    - name: Set up API environment variables
-      run: |
-        echo "ALPHA_VANTAGE_KEY=${{ secrets.ALPHA_VANTAGE_KEY }}" >> $GITHUB_ENV
-        echo "FMP_KEY=${{ secrets.FMP_KEY }}" >> $GITHUB_ENV
-        echo "NEWSAPI_KEY=${{ secrets.NEWSAPI_KEY }}" >> $GITHUB_ENV
-    
-    - name: Determine commit type based on schedule
+      run: pip install -r scripts/requirements.txt
+
+    - name: Determine commit type from schedule
       id: commit_type
       run: |
-        # Get current UTC hour and day of week (1=Monday, 7=Sunday)
-        CURRENT_HOUR=$(date -u +%H)
-        DAY_OF_WEEK=$(date -u +%u)  # 1-7 (Monday=1, Sunday=7)
-        echo "Current UTC hour: $CURRENT_HOUR"
-        echo "Day of week: $DAY_OF_WEEK (1=Monday, 7=Sunday)"
-        
-        # Check if it's weekend (Saturday=6, Sunday=7)
-        if [ $DAY_OF_WEEK -ge 6 ]; then
-          # WEEKEND SCHEDULE
-          echo "Weekend detected - using weekend schedule"
-          
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            # Manual trigger - use input
-            COMMIT_TYPE="${{ github.event.inputs.commit_type }}"
-            if [ "$COMMIT_TYPE" == "all" ]; then
-              # For manual "all" on weekend, run all weekend collections
-              COMMIT_TYPE="weekend_all"
-            fi
-          else
-            # Scheduled weekend run - determine by hour
-            if [ $CURRENT_HOUR -eq 10 ]; then
-              # 10:00 AM UTC - Saturday: historical, Sunday: alternative data
-              if [ $DAY_OF_WEEK -eq 6 ]; then
-                COMMIT_TYPE="weekend_historical"
-              else
-                COMMIT_TYPE="weekend_alternative"
-              fi
-            elif [ $CURRENT_HOUR -eq 14 ]; then
-              # 2:00 PM UTC - Saturday: news, Sunday: summary
-              if [ $DAY_OF_WEEK -eq 6 ]; then
-                COMMIT_TYPE="weekend_news"
-              else
-                COMMIT_TYPE="weekend_summary"
-              fi
-            else
-              COMMIT_TYPE="weekend_all"
-            fi
-          fi
+        EVENT="${{ github.event_name }}"
+        SCHED="${{ github.event.schedule }}"
+        HOUR=$(date -u +%H)
+        DOW=$(date -u +%u)   # 1=Mon .. 7=Sun
+        echo "event=$EVENT schedule=$SCHED hour=$HOUR dow=$DOW"
+
+        if [ "$EVENT" = "schedule" ]; then
+          # Deterministic map from the cron string that fired (delay-proof).
+          case "$SCHED" in
+            "17 8 * * 1-5")  CT="pre_market" ;;
+            "17 13 * * 1-5") CT="mid_day" ;;
+            "17 21 * * 1-5") CT="end_of_day" ;;
+            "17 10 * * 6")   CT="weekend_historical" ;;
+            "17 14 * * 6")   CT="weekend_news" ;;
+            "17 10 * * 0")   CT="weekend_alternative" ;;
+            "17 14 * * 0")   CT="weekend_summary" ;;
+            # Never fall through to a no-op: pick a valid type by day so a run
+            # always collects *something* and produces a commit.
+            *) if [ "$DOW" -ge 6 ]; then CT="weekend_all"; else CT="end_of_day"; fi ;;
+          esac
         else
-          # WEEKDAY SCHEDULE
-          echo "Weekday detected - using weekday schedule"
-          
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            # Manual trigger - use input
-            COMMIT_TYPE="${{ github.event.inputs.commit_type }}"
-            if [ "$COMMIT_TYPE" == "all" ]; then
-              # For manual "all", run based on current hour
-              if [ $CURRENT_HOUR -lt 12 ]; then
-                COMMIT_TYPE="pre_market"
-              elif [ $CURRENT_HOUR -lt 17 ]; then
-                COMMIT_TYPE="mid_day"
-              else
-                COMMIT_TYPE="end_of_day"
-              fi
-            fi
+          # workflow_dispatch
+          IN="${{ github.event.inputs.commit_type }}"
+          if [ -n "$IN" ] && [ "$IN" != "all" ]; then
+            CT="$IN"
+          elif [ "$DOW" -ge 6 ]; then
+            CT="weekend_all"
+          elif [ "$HOUR" -lt 12 ]; then
+            CT="pre_market"
+          elif [ "$HOUR" -lt 17 ]; then
+            CT="mid_day"
           else
-            # Scheduled weekday run - determine by hour
-            if [ $CURRENT_HOUR -eq 8 ]; then
-              COMMIT_TYPE="pre_market"
-            elif [ $CURRENT_HOUR -eq 13 ]; then
-              COMMIT_TYPE="mid_day"
-            elif [ $CURRENT_HOUR -eq 21 ]; then
-              COMMIT_TYPE="end_of_day"
-            else
-              COMMIT_TYPE="unknown"
-            fi
+            CT="end_of_day"
           fi
         fi
-        
-        echo "COMMIT_TYPE=$COMMIT_TYPE" >> $GITHUB_OUTPUT
-        echo "Determined commit type: $COMMIT_TYPE"
-    
+
+        echo "COMMIT_TYPE=$CT" >> "$GITHUB_OUTPUT"
+        echo "Determined commit type: $CT"
+
+    # ---- Collection steps (run from repo root so data lands in top-level data/) ----
     - name: Run Pre-Market Collection
       if: steps.commit_type.outputs.COMMIT_TYPE == 'pre_market'
-      run: |
-        cd scripts
-        python pre_market_collection.py
+      run: python scripts/pre_market_collection.py
       env:
         COMMIT_TYPE: pre_market
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
         FMP_KEY: ${{ secrets.FMP_KEY }}
         NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
+
     - name: Run Mid-Day Analysis
       if: steps.commit_type.outputs.COMMIT_TYPE == 'mid_day'
-      run: |
-        cd scripts
-        python mid_day_analysis.py
+      run: python scripts/mid_day_analysis.py
       env:
         COMMIT_TYPE: mid_day
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
         FMP_KEY: ${{ secrets.FMP_KEY }}
         NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
+
     - name: Run End-of-Day Collection
       if: steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day'
-      run: |
-        cd scripts
-        python collect_data.py
+      run: python scripts/collect_data.py
       env:
         COMMIT_TYPE: end_of_day
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
         FMP_KEY: ${{ secrets.FMP_KEY }}
         NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
-    # WEEKEND COLLECTIONS
-    - name: Run Weekend Historical Collection
-      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_historical'
-      run: |
-        cd scripts
-        python weekend_collection.py
+
+    # ---- Weekend collections (all use weekend_collection.py) ----
+    - name: Run Weekend Collection
+      if: startsWith(steps.commit_type.outputs.COMMIT_TYPE, 'weekend_')
+      run: python scripts/weekend_collection.py
       env:
-        COMMIT_TYPE: weekend_historical
-        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
-        FMP_KEY: ${{ secrets.FMP_KEY }}
-        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
-    - name: Run Weekend News Collection
-      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_news'
-      run: |
-        cd scripts
-        python weekend_collection.py
-      env:
-        COMMIT_TYPE: weekend_news
-        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
-        FMP_KEY: ${{ secrets.FMP_KEY }}
-        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
-    - name: Run Weekend Alternative Data Collection
-      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_alternative'
-      run: |
-        cd scripts
-        python weekend_collection.py
-      env:
-        COMMIT_TYPE: weekend_alternative
-        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
-        FMP_KEY: ${{ secrets.FMP_KEY }}
-        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
-    - name: Run Weekend Summary Collection
-      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_summary'
-      run: |
-        cd scripts
-        python weekend_collection.py
-      env:
-        COMMIT_TYPE: weekend_summary
-        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
-        FMP_KEY: ${{ secrets.FMP_KEY }}
-        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
-    - name: Run All Weekend Collections
-      if: steps.commit_type.outputs.COMMIT_TYPE == 'weekend_all'
-      run: |
-        cd scripts
-        python weekend_collection.py
-      env:
-        COMMIT_TYPE: weekend_all
-        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
-        FMP_KEY: ${{ secrets.FMP_KEY }}
-        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-    
-    - name: Configure Git
-      run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
-    
-    - name: Create Pull Request
-      id: create_pr
-      run: |
-        cd scripts
-        python create_pr.py
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN_WRITE }}
         COMMIT_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
-        DAY_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day' && 'weekday' || 'special' }}
-        ACTIVITY_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
-    
-    - name: Wait for checks to complete
-      if: steps.create_pr.outputs.pr_number != ''
+        ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        FMP_KEY: ${{ secrets.FMP_KEY }}
+        NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+
+    # ---- Commit directly to the default branch ----
+    - name: Commit and push to main
+      id: commit
       run: |
-        echo "Waiting 30 seconds for checks to start..."
-        sleep 30
-        
-        # Wait up to 2 minutes for checks to complete
-        for i in {1..12}; do
-          echo "Check $i/12: Waiting 10 seconds..."
-          sleep 10
-        done
-    
-    - name: Auto-merge Pull Request
-      if: steps.create_pr.outputs.pr_number != ''
-      run: |
-        echo "Attempting to auto-merge PR #${{ steps.create_pr.outputs.pr_number }}"
-        
-        # Enable auto-merge with squash
-        gh pr merge ${{ steps.create_pr.outputs.pr_number }} --auto --squash --body "Automatically merged by GitHub Actions"
-        
-        echo "✅ Auto-merge enabled for PR #${{ steps.create_pr.outputs.pr_number }}"
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN_WRITE }}
-    
+        # Author commits as the repo owner's verified GitHub noreply address so
+        # every automated commit counts toward the contribution graph.
+        git config user.name "PCnslt"
+        git config user.email "97403801+PCnslt@users.noreply.github.com"
+
+        git add -A
+
+        if git diff --cached --quiet; then
+          echo "No changes to commit for this run."
+          echo "committed=false" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        DATE=$(TZ=America/New_York date +%Y-%m-%d)
+        TIME=$(TZ=America/New_York date +%H%M)
+        CT="${{ steps.commit_type.outputs.COMMIT_TYPE }}"
+
+        case "$CT" in
+          pre_market)  MSG="Pre-market data collection for $DATE at $TIME EST" ;;
+          mid_day)     MSG="Mid-day market analysis for $DATE at $TIME EST" ;;
+          end_of_day)  MSG="End-of-day data collection for $DATE at $TIME EST" ;;
+          weekend_*)   MSG="Weekend comprehensive data collection for $DATE" ;;
+          *)           MSG="Market data collection for $DATE at $TIME EST" ;;
+        esac
+
+        git commit -m "$MSG"
+
+        # Re-base on any commits that landed since checkout, then push to main.
+        git pull --rebase origin main || true
+        git push origin HEAD:main
+
+        echo "committed=true" >> "$GITHUB_OUTPUT"
+        echo "Committed and pushed: $MSG"
+
     - name: Create workflow summary
       run: |
-        echo "## Triple Daily Market Data Update" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Commit Type:** ${{ steps.commit_type.outputs.COMMIT_TYPE }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Scheduled Time:** ${{ github.event.schedule }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        
-        case "${{ steps.commit_type.outputs.COMMIT_TYPE }}" in
-          "pre_market")
-            echo "**Description:** Pre-market data collection including futures, global markets, and economic calendar." >> $GITHUB_STEP_SUMMARY
-            ;;
-          "mid_day")
-            echo "**Description:** Mid-day market analysis including morning performance, sector rotation, and trading insights." >> $GITHUB_STEP_SUMMARY
-            ;;
-          "end_of_day")
-            echo "**Description:** End-of-day market data including top gainers/losers, volume leaders, and complete analysis." >> $GITHUB_STEP_SUMMARY
-            ;;
-          *)
-            echo "**Description:** Unknown commit type." >> $GITHUB_STEP_SUMMARY
-            ;;
-        esac
-        
-        echo "" >> $GITHUB_STEP_SUMMARY
-        
-        if [ "${{ steps.create_pr.outputs.pr_number }}" != "" ]; then
-          echo "✅ Pull Request #${{ steps.create_pr.outputs.pr_number }} created and auto-merge enabled!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The data has been collected and will be automatically merged when checks pass." >> $GITHUB_STEP_SUMMARY
+        echo "## Market Data Collection" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        echo "**Commit type:** ${{ steps.commit_type.outputs.COMMIT_TYPE }}" >> "$GITHUB_STEP_SUMMARY"
+        echo "**Triggered by:** ${{ github.event_name }} ${{ github.event.schedule }}" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        if [ "${{ steps.commit.outputs.committed }}" = "true" ]; then
+          echo "Changes committed and pushed to main." >> "$GITHUB_STEP_SUMMARY"
         else
-          echo "⚠️  No changes to commit for this time slot." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This could be because:" >> $GITHUB_STEP_SUMMARY
-          echo "1. It's a weekend (no pre-market/mid-day data on weekends)" >> $GITHUB_STEP_SUMMARY
-          echo "2. No new data was available" >> $GITHUB_STEP_SUMMARY
-          echo "3. An error occurred during data collection" >> $GITHUB_STEP_SUMMARY
+          echo "No changes to commit for this run." >> "$GITHUB_STEP_SUMMARY"
         fi
-        
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Next Schedule:" >> $GITHUB_STEP_SUMMARY
-        echo "- **Pre-market:** 8:00 AM UTC daily (weekdays)" >> $GITHUB_STEP_SUMMARY
-        echo "- **Mid-day:** 1:00 PM UTC daily (weekdays)" >> $GITHUB_STEP_SUMMARY
-        echo "- **End-of-day:** 9:00 PM UTC daily (weekdays)" >> $GITHUB_STEP_SUMMARY
