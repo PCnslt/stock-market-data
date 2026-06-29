@@ -90,10 +90,12 @@ jobs:
         echo "COMMIT_TYPE=$CT" >> "$GITHUB_OUTPUT"
         echo "Determined commit type: $CT"
 
-    # ---- Collection steps (run from repo root so data lands in top-level data/) ----
+    # ---- Collection steps (run from scripts/ so data lands in scripts/data/ as designed) ----
     - name: Run Pre-Market Collection
       if: steps.commit_type.outputs.COMMIT_TYPE == 'pre_market'
-      run: python scripts/pre_market_collection.py
+      run: |
+        cd scripts
+        python pre_market_collection.py
       env:
         COMMIT_TYPE: pre_market
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
@@ -102,7 +104,9 @@ jobs:
 
     - name: Run Mid-Day Analysis
       if: steps.commit_type.outputs.COMMIT_TYPE == 'mid_day'
-      run: python scripts/mid_day_analysis.py
+      run: |
+        cd scripts
+        python mid_day_analysis.py
       env:
         COMMIT_TYPE: mid_day
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
@@ -111,7 +115,9 @@ jobs:
 
     - name: Run End-of-Day Collection
       if: steps.commit_type.outputs.COMMIT_TYPE == 'end_of_day'
-      run: python scripts/collect_data.py
+      run: |
+        cd scripts
+        python collect_data.py
       env:
         COMMIT_TYPE: end_of_day
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
@@ -121,7 +127,9 @@ jobs:
     # ---- Weekend collections (all use weekend_collection.py) ----
     - name: Run Weekend Collection
       if: startsWith(steps.commit_type.outputs.COMMIT_TYPE, 'weekend_')
-      run: python scripts/weekend_collection.py
+      run: |
+        cd scripts
+        python weekend_collection.py
       env:
         COMMIT_TYPE: ${{ steps.commit_type.outputs.COMMIT_TYPE }}
         ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
