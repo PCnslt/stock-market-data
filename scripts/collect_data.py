@@ -11,7 +11,7 @@ Data sources (in priority order):
 The previous version scraped Wikipedia + used yfinance, both of which are routinely
 rate-limited / blocked on GitHub-hosted runners and therefore almost always fell back
 to hardcoded sample numbers. This version pulls real data from authenticated APIs and
-records which source actually answered in every output file (`data_source`).
+logs which source actually answered (the output files are unchanged).
 """
 
 import json
@@ -27,7 +27,7 @@ ALPHA_VANTAGE_KEY = os.environ.get("ALPHA_VANTAGE_KEY", "").strip()
 
 REQUEST_TIMEOUT = 15
 
-# Tracks which source produced the mover data so callers can detect sample fallback.
+# Tracks which source produced the mover data (logged, not persisted).
 DATA_SOURCE = "unknown"
 
 INDEX_NAME_MAP = {
@@ -284,7 +284,7 @@ def save_data(date_str, data_dir):
     global DATA_SOURCE
     DATA_SOURCE = movers_source
 
-    # Keep stable CSV columns for backwards compatibility with existing data.
+    # Keep the original output files/columns unchanged (planned data structure).
     mover_cols = ["symbol", "name", "price", "change", "pct_change", "volume"]
     for df in (gainers_df, losers_df, most_active_df):
         for col in mover_cols:
@@ -299,11 +299,11 @@ def save_data(date_str, data_dir):
         columns=["symbol", "name", "price", "change", "volume"],
     )
 
+    # indices.json keeps its original schema (date, indices, updated_at).
     with open(os.path.join(data_dir, "indices.json"), "w") as f:
         json.dump(
             {
                 "date": date_str,
-                "data_source": indices_source,
                 "indices": indices_df.to_dict("records"),
                 "updated_at": datetime.now().isoformat(),
             },
@@ -311,27 +311,9 @@ def save_data(date_str, data_dir):
             indent=2,
         )
 
-    # Summary file makes the data source auditable at a glance.
-    with open(os.path.join(data_dir, "collection_summary.json"), "w") as f:
-        json.dump(
-            {
-                "date": date_str,
-                "movers_source": movers_source,
-                "indices_source": indices_source,
-                "is_real_data": movers_source != "fallback_sample",
-                "counts": {
-                    "gainers": len(gainers_df),
-                    "losers": len(losers_df),
-                    "most_active": len(most_active_df),
-                    "indices": len(indices_df),
-                },
-                "updated_at": datetime.now().isoformat(),
-            },
-            f,
-            indent=2,
-        )
-
-    print(f"Data saved to {data_dir}/ (source: {movers_source})")
+    # Data source is logged to the run console only (not written to data files,
+    # so the planned data structure is unchanged).
+    print(f"Data saved to {data_dir}/ (movers source: {movers_source}, indices source: {indices_source})")
     print(f"  - {len(gainers_df)} gainers")
     print(f"  - {len(losers_df)} losers")
     print(f"  - {len(most_active_df)} most active")
