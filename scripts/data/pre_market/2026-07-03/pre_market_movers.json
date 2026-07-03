@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-07-03T11:01:21.426053",
+  "data_source": "fallback_sample",
+  "gainers": [
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "price": 182.5,
+      "change": 2.5,
+      "change_percent": 1.39,
+      "volume": 50000
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "TSLA",
+      "name": "Tesla",
+      "price": 175.2,
+      "change": -3.8,
+      "change_percent": -2.12,
+      "volume": 60000
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "SPY",
+      "name": "SPDR S&P 500 ETF",
+      "price": 520.45,
+      "change": 1.45,
+      "volume": 150000
+    }
+  ]
+}
