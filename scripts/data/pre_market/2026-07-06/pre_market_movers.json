@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-07-06T12:15:07.672096",
+  "data_source": "alpha_vantage",
+  "gainers": [],
+  "losers": [
+    {
+      "symbol": "GOOGL",
+      "price": 359.91,
+      "change": -1.3,
+      "change_percent": -0.3599,
+      "volume": 25999346
+    },
+    {
+      "symbol": "TSLA",
+      "price": 393.45,
+      "change": -31.85,
+      "change_percent": -7.4888,
+      "volume": 73915762
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "GOOGL",
+      "price": 359.91,
+      "change": -1.3,
+      "change_percent": -0.3599,
+      "volume": 25999346
+    },
+    {
+      "symbol": "TSLA",
+      "price": 393.45,
+      "change": -31.85,
+      "change_percent": -7.4888,
+      "volume": 73915762
+    }
+  ]
+}
