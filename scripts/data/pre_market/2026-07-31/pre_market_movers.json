@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-07-31T11:00:15.810857",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "MSFT",
+      "price": 451.1,
+      "change": 60.56,
+      "change_percent": 15.5067,
+      "volume": 110160704
+    },
+    {
+      "symbol": "AMZN",
+      "price": 235.5,
+      "change": 8.85,
+      "change_percent": 3.9047,
+      "volume": 101839774
+    },
+    {
+      "symbol": "NVDA",
+      "price": 195.04,
+      "change": 5.03,
+      "change_percent": 2.6472,
+      "volume": 129010151
+    }
+  ],
+  "losers": [],
+  "most_active": [
+    {
+      "symbol": "MSFT",
+      "price": 451.1,
+      "change": 60.56,
+      "change_percent": 15.5067,
+      "volume": 110160704
+    },
+    {
+      "symbol": "AMZN",
+      "price": 235.5,
+      "change": 8.85,
+      "change_percent": 3.9047,
+      "volume": 101839774
+    },
+    {
+      "symbol": "NVDA",
+      "price": 195.04,
+      "change": 5.03,
+      "change_percent": 2.6472,
+      "volume": 129010151
+    }
+  ]
+}
