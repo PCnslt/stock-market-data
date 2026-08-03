@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-08-03T11:46:15.099890",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "MSFT",
+      "price": 464.72,
+      "change": 13.62,
+      "change_percent": 3.0193,
+      "volume": 60845971
+    },
+    {
+      "symbol": "NVDA",
+      "price": 200.75,
+      "change": 5.71,
+      "change_percent": 2.9276,
+      "volume": 139961152
+    }
+  ],
+  "losers": [],
+  "most_active": [
+    {
+      "symbol": "MSFT",
+      "price": 464.72,
+      "change": 13.62,
+      "change_percent": 3.0193,
+      "volume": 60845971
+    },
+    {
+      "symbol": "NVDA",
+      "price": 200.75,
+      "change": 5.71,
+      "change_percent": 2.9276,
+      "volume": 139961152
+    }
+  ]
+}
