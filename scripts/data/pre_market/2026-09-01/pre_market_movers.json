@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-09-01T13:31:07.851366",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "TSLA",
+      "price": 367.95,
+      "change": 19.2,
+      "change_percent": 5.5054,
+      "volume": 61732258
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "MSFT",
+      "price": 507.29,
+      "change": -6.24,
+      "change_percent": -1.2151,
+      "volume": 27208911
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "MSFT",
+      "price": 507.29,
+      "change": -6.24,
+      "change_percent": -1.2151,
+      "volume": 27208911
+    },
+    {
+      "symbol": "TSLA",
+      "price": 367.95,
+      "change": 19.2,
+      "change_percent": 5.5054,
+      "volume": 61732258
+    }
+  ]
+}
