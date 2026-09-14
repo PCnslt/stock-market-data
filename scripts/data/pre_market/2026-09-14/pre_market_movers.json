@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-09-14T15:02:29.414711",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "GOOGL",
+      "price": 338.5,
+      "change": 5.9,
+      "change_percent": 1.7739,
+      "volume": 24708293
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "NVDA",
+      "price": 218.29,
+      "change": -0.07,
+      "change_percent": -0.0321,
+      "volume": 89060140
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "GOOGL",
+      "price": 338.5,
+      "change": 5.9,
+      "change_percent": 1.7739,
+      "volume": 24708293
+    },
+    {
+      "symbol": "NVDA",
+      "price": 218.29,
+      "change": -0.07,
+      "change_percent": -0.0321,
+      "volume": 89060140
+    }
+  ]
+}
