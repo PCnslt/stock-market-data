@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-09-15T13:36:01.753918",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "META",
+      "price": 665.6,
+      "change": 17.57,
+      "change_percent": 2.7113,
+      "volume": 19332324
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "AMZN",
+      "price": 253.54,
+      "change": -3.24,
+      "change_percent": -1.2618,
+      "volume": 34352766
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "AMZN",
+      "price": 253.54,
+      "change": -3.24,
+      "change_percent": -1.2618,
+      "volume": 34352766
+    },
+    {
+      "symbol": "META",
+      "price": 665.6,
+      "change": 17.57,
+      "change_percent": 2.7113,
+      "volume": 19332324
+    }
+  ]
+}
