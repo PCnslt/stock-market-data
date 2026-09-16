@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-09-16T13:31:57.362426",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "META",
+      "price": 670.24,
+      "change": 4.64,
+      "change_percent": 0.6971,
+      "volume": 19502840
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "AAPL",
+      "price": 331.34,
+      "change": -1.74,
+      "change_percent": -0.5224,
+      "volume": 31748183
+    },
+    {
+      "symbol": "AMZN",
+      "price": 248.42,
+      "change": -5.12,
+      "change_percent": -2.0194,
+      "volume": 36275442
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "AAPL",
+      "price": 331.34,
+      "change": -1.74,
+      "change_percent": -0.5224,
+      "volume": 31748183
+    },
+    {
+      "symbol": "AMZN",
+      "price": 248.42,
+      "change": -5.12,
+      "change_percent": -2.0194,
+      "volume": 36275442
+    },
+    {
+      "symbol": "META",
+      "price": 670.24,
+      "change": 4.64,
+      "change_percent": 0.6971,
+      "volume": 19502840
+    }
+  ]
+}
