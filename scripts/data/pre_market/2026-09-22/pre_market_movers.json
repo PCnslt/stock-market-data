@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-09-22T13:26:11.632927",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "AMZN",
+      "price": 258.45,
+      "change": 4.74,
+      "change_percent": 1.8683,
+      "volume": 42979407
+    }
+  ],
+  "losers": [],
+  "most_active": [
+    {
+      "symbol": "AMZN",
+      "price": 258.45,
+      "change": 4.74,
+      "change_percent": 1.8683,
+      "volume": 42979407
+    }
+  ]
+}
