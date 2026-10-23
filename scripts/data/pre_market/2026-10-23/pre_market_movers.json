@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-10-23T01:09:51.084387",
+  "data_source": "alpha_vantage",
+  "gainers": [],
+  "losers": [
+    {
+      "symbol": "GOOGL",
+      "price": 324.22,
+      "change": -10.54,
+      "change_percent": -3.1485,
+      "volume": 27285454
+    },
+    {
+      "symbol": "META",
+      "price": 648.85,
+      "change": -48.67,
+      "change_percent": -6.9776,
+      "volume": 40309002
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "GOOGL",
+      "price": 324.22,
+      "change": -10.54,
+      "change_percent": -3.1485,
+      "volume": 27285454
+    },
+    {
+      "symbol": "META",
+      "price": 648.85,
+      "change": -48.67,
+      "change_percent": -6.9776,
+      "volume": 40309002
+    }
+  ]
+}
