@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-10-28T15:07:26.633075",
+  "data_source": "alpha_vantage",
+  "gainers": [
+    {
+      "symbol": "GOOGL",
+      "price": 320.58,
+      "change": 3.78,
+      "change_percent": 1.1932,
+      "volume": 28633058
+    },
+    {
+      "symbol": "TSLA",
+      "price": 407.46,
+      "change": 15.84,
+      "change_percent": 4.0447,
+      "volume": 45333228
+    }
+  ],
+  "losers": [
+    {
+      "symbol": "MSFT",
+      "price": 531.33,
+      "change": -1.27,
+      "change_percent": -0.2385,
+      "volume": 19532321
+    }
+  ],
+  "most_active": [
+    {
+      "symbol": "MSFT",
+      "price": 531.33,
+      "change": -1.27,
+      "change_percent": -0.2385,
+      "volume": 19532321
+    },
+    {
+      "symbol": "GOOGL",
+      "price": 320.58,
+      "change": 3.78,
+      "change_percent": 1.1932,
+      "volume": 28633058
+    },
+    {
+      "symbol": "TSLA",
+      "price": 407.46,
+      "change": 15.84,
+      "change_percent": 4.0447,
+      "volume": 45333228
+    }
+  ]
+}
